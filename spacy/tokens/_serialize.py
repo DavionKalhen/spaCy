@@ -1,10 +1,10 @@
 from typing import List, Dict, Set, Iterable, Iterator, Union, Optional
 from pathlib import Path
-import numpy
-from numpy import ndarray
+import nlcpy
+from nlcpy import ndarray
 import zlib
 import srsly
-from thinc.api import NumpyOps
+from thinc.api import nlcpyOps
 
 from .doc import Doc
 from ..vocab import Vocab

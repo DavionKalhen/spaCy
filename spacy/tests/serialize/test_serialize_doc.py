@@ -1,7 +1,7 @@
 import copy
 import pickle
 
-import numpy
+import nlcpy
 import pytest
 
 from spacy.attrs import DEP, HEAD

@@ -7,7 +7,7 @@ from spacy.tokens import Span
 from spacy.training import Example
 from spacy.tests.util import make_tempdir
 
-from thinc.api import NumpyOps, get_current_ops
+from thinc.api import nlcpyOps, get_current_ops
 
 
 @pytest.fixture

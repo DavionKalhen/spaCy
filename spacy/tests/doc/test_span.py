@@ -1,6 +1,6 @@
 import pytest
-import numpy
-from numpy.testing import assert_array_equal
+import nlcpy
+from nlcpy.testing import assert_array_equal
 
 from spacy.attrs import ORTH, LENGTH
 from spacy.lang.en import English

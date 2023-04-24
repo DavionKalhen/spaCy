@@ -1,5 +1,5 @@
 import pytest
-import numpy
+import nlcpy
 from spacy.attrs import IS_ALPHA, IS_DIGIT, IS_LOWER, IS_PUNCT, IS_TITLE, IS_STOP
 from spacy.symbols import VERB
 from spacy.vocab import Vocab

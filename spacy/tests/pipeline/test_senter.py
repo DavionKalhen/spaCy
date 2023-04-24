@@ -1,5 +1,5 @@
 import pytest
-from numpy.testing import assert_equal
+from nlcpy.testing import assert_equal
 from spacy.attrs import SENT_START
 
 from spacy import util

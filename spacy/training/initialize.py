@@ -3,7 +3,7 @@ from thinc.api import Config, fix_random_seed, set_gpu_allocator
 from thinc.api import ConfigValidationError
 from pathlib import Path
 import srsly
-import numpy
+import nlcpy
 import tarfile
 import gzip
 import zipfile

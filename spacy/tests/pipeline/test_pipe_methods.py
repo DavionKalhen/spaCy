@@ -1,6 +1,6 @@
 import gc
 
-import numpy
+import nlcpy
 import pytest
 from thinc.api import get_current_ops
 

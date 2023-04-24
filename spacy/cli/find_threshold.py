@@ -4,7 +4,7 @@ from pathlib import Path
 import logging
 from typing import Optional, Tuple, Any, Dict, List
 
-import numpy
+import nlcpy
 import wasabi.tables
 
 from ..pipeline import TextCategorizer, MultiLabel_TextCategorizer

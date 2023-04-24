@@ -1,4 +1,4 @@
-import numpy
+import nlcpy
 import tempfile
 import contextlib
 import re

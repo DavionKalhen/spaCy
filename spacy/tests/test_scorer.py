@@ -1,4 +1,4 @@
-from numpy.testing import assert_almost_equal, assert_array_almost_equal
+from nlcpy.testing import assert_almost_equal, assert_array_almost_equal
 import pytest
 from pytest import approx
 from spacy.training import Example

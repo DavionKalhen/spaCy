@@ -9,7 +9,7 @@ from spacy import util
 from spacy.lang.en import English
 from spacy.util import registry
 from thinc.api import Config, get_current_ops
-from numpy.testing import assert_array_equal
+from nlcpy.testing import assert_array_equal
 
 from ..util import get_batch, make_tempdir, add_vecs_to_vocab
 

@@ -2,8 +2,8 @@ from typing import List
 import pytest
 from thinc.api import fix_random_seed, Adam, set_dropout_rate
 from thinc.api import Ragged, reduce_mean, Logistic, chain, Relu
-from numpy.testing import assert_array_equal, assert_array_almost_equal
-import numpy
+from nlcpy.testing import assert_array_equal, assert_array_almost_equal
+import nlcpy
 from spacy.ml.models import build_Tok2Vec_model, MultiHashEmbed, MaxoutWindowEncoder
 from spacy.ml.models import build_bow_text_classifier, build_simple_cnn_text_classifier
 from spacy.ml.models import build_spancat_model

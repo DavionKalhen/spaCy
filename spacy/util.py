@@ -8,11 +8,11 @@ import importlib.util
 import re
 from pathlib import Path
 import thinc
-from thinc.api import NumpyOps, get_current_ops, Adam, Config, Optimizer
+from thinc.api import nlcpyOps, get_current_ops, Adam, Config, Optimizer
 from thinc.api import ConfigValidationError, Model
 import functools
 import itertools
-import numpy
+import nlcpy
 import srsly
 import catalogue
 from catalogue import RegistryError, Registry

@@ -1,6 +1,6 @@
 from typing import Optional, Iterable, Dict, Set, List, Any, Callable, Tuple
 from typing import TYPE_CHECKING
-import numpy as np
+import nlcpy as np
 from collections import defaultdict
 
 from .training import Example

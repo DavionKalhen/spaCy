@@ -1,5 +1,5 @@
 import pytest
-import numpy
+import nlcpy
 from spacy.training import Example
 from spacy.lang.en import English
 from spacy.pipeline import AttributeRuler

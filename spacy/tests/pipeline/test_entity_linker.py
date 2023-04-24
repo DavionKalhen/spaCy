@@ -1,7 +1,7 @@
 from typing import Callable, Iterable, Dict, Any, Tuple
 
 import pytest
-from numpy.testing import assert_equal
+from nlcpy.testing import assert_equal
 
 from spacy import registry, util, Language
 from spacy.attrs import ENT_KB_ID

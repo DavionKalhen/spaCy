@@ -1,7 +1,7 @@
 import random
 
 import pytest
-from numpy.testing import assert_equal
+from nlcpy.testing import assert_equal
 
 from spacy.attrs import ENT_IOB
 from spacy import util, registry

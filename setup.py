@@ -2,7 +2,7 @@
 from setuptools import Extension, setup, find_packages
 import sys
 import platform
-import numpy
+import nlcpy
 from distutils.command.build_ext import build_ext
 from distutils.sysconfig import get_python_inc
 from pathlib import Path
@@ -134,7 +134,7 @@ class build_ext_subclass(build_ext, build_ext_options):
         build_ext.build_extensions(self)
 
 
-# Include the git version in the build (adapted from NumPy)
+# Include the git version in the build (adapted from nlcpy)
 # Copyright (c) 2005-2020, NumPy Developers.
 # BSD 3-Clause license, see licenses/3rd_party_licenses.txt
 def write_git_info_py(filename="spacy/git_info.py"):

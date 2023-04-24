@@ -1,5 +1,5 @@
 from pathlib import Path
-import numpy as np
+import nlcpy as np
 import pytest
 import srsly
 from thinc.api import Config, get_current_ops
@@ -340,7 +340,7 @@ def write_sample_training(tmp_dir):
 
 
 def write_vectors_model(tmp_dir):
-    import numpy
+    import nlcpy
 
     vocab = Vocab()
     vector_data = {

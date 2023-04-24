@@ -1,8 +1,8 @@
 from typing import List
 
-import numpy
+import nlcpy
 import pytest
-from numpy.testing import assert_almost_equal
+from nlcpy.testing import assert_almost_equal
 from spacy.vocab import Vocab
 from thinc.api import Model, data_validation, get_current_ops
 from thinc.types import Array2d, Ragged

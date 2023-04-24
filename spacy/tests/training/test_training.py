@@ -1,6 +1,6 @@
 import random
 
-import numpy
+import nlcpy
 import pytest
 import spacy
 import srsly

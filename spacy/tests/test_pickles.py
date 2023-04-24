@@ -1,5 +1,5 @@
 import pytest
-import numpy
+import nlcpy
 import srsly
 from spacy.lang.en import English
 from spacy.strings import StringStore

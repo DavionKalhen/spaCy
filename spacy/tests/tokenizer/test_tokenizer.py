@@ -1,6 +1,6 @@
 import re
 
-import numpy
+import nlcpy
 import pytest
 
 from spacy.lang.en import English

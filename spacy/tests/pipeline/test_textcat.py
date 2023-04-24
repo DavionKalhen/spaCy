@@ -1,8 +1,8 @@
 import random
 
-import numpy.random
+import nlcpy.random
 import pytest
-from numpy.testing import assert_almost_equal
+from nlcpy.testing import assert_almost_equal
 from thinc.api import Config, compounding, fix_random_seed, get_current_ops
 from wasabi import msg
 

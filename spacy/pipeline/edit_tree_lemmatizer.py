@@ -2,7 +2,7 @@ from typing import cast, Any, Callable, Dict, Iterable, List, Optional
 from typing import Tuple
 from collections import Counter
 from itertools import islice
-import numpy as np
+import nlcpy as np
 
 import srsly
 from thinc.api import Config, Model, SequenceCategoricalCrossentropy, NumpyOps

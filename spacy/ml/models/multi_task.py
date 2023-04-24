@@ -10,7 +10,7 @@ from ...errors import Errors
 from ...attrs import ID, ORTH
 from ...vectors import Mode as VectorsMode
 
-import numpy
+import nlcpy
 from functools import partial
 
 if TYPE_CHECKING:

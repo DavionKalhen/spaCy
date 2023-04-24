@@ -10,7 +10,7 @@ from spacy.vocab import Vocab
 from thinc.api import Config
 
 from ..util import make_tempdir
-from numpy import zeros
+from nlcpy import zeros
 
 
 def test_serialize_kb_disk(en_vocab):

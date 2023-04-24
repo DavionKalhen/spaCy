@@ -1,7 +1,7 @@
 import pytest
 import hypothesis
 import hypothesis.strategies
-import numpy
+import nlcpy
 from spacy.vocab import Vocab
 from spacy.language import Language
 from spacy.pipeline._parser_internals.arc_eager import ArcEager

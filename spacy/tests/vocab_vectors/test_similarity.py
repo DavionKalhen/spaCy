@@ -1,5 +1,5 @@
 import pytest
-import numpy
+import nlcpy
 from spacy.tokens import Doc
 from spacy.vocab import Vocab
 

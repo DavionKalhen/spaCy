@@ -1,10 +1,10 @@
 import weakref
 
-import numpy
-from numpy.testing import assert_array_equal
+import nlcpy
+from nlcpy.testing import assert_array_equal
 import pytest
 import warnings
-from thinc.api import NumpyOps, get_current_ops
+from thinc.api import nlcpyOps, get_current_ops
 
 from spacy.attrs import DEP, ENT_IOB, ENT_TYPE, HEAD, IS_ALPHA, MORPH, POS
 from spacy.attrs import SENT_START, TAG

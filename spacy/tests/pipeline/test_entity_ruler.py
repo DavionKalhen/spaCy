@@ -10,7 +10,7 @@ from spacy.pipeline.ner import DEFAULT_NER_MODEL
 from spacy.errors import MatchPatternError
 from spacy.tests.util import make_tempdir
 
-from thinc.api import NumpyOps, get_current_ops
+from thinc.api import nlcpyOps, get_current_ops
 
 ENTITY_RULERS = ["entity_ruler", "future_entity_ruler"]
 

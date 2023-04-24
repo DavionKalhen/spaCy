@@ -1,4 +1,4 @@
-import numpy
+import nlcpy
 import pytest
 
 from spacy import displacy

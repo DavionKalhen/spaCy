@@ -1,5 +1,5 @@
 import pytest
-from numpy.testing import assert_equal
+from nlcpy.testing import assert_equal
 from thinc.api import Adam
 
 from spacy import registry, util

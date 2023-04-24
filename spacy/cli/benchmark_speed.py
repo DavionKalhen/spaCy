@@ -1,7 +1,7 @@
 from typing import Iterable, List, Optional
 import random
 from itertools import islice
-import numpy
+import nlcpy
 from pathlib import Path
 import time
 from tqdm import tqdm

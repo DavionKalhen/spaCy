@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 import spacy
-import numpy
+import nlcpy
 import pytest
 import srsly
 from click import NoSuchOption

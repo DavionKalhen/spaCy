@@ -1,7 +1,7 @@
-import numpy
+import nlcpy
 import pytest
-from numpy.testing import assert_allclose, assert_almost_equal, assert_equal
-from thinc.api import NumpyOps, get_current_ops
+from nlcpy.testing import assert_allclose, assert_almost_equal, assert_equal
+from thinc.api import nlcpyOps, get_current_ops
 
 from spacy.lang.en import English
 from spacy.strings import hash_string  # type: ignore

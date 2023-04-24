@@ -1,4 +1,4 @@
-import numpy
+import nlcpy
 import pytest
 from spacy.attrs import IS_ALPHA, IS_DIGIT
 from spacy.lookups import Lookups

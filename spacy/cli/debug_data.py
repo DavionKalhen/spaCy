@@ -7,7 +7,7 @@ import srsly
 from wasabi import Printer, MESSAGES, msg
 import typer
 import math
-import numpy
+import nlcpy
 
 from ._util import app, Arg, Opt, show_validation_error, parse_config_overrides
 from ._util import import_code, debug_cli, _format_number

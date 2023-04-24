@@ -1,6 +1,6 @@
 import pytest
-import numpy
-from numpy.testing import assert_array_equal, assert_almost_equal
+import nlcpy
+from nlcpy.testing import assert_array_equal, assert_almost_equal
 from thinc.api import get_current_ops, NumpyOps, Ragged
 
 from spacy import util

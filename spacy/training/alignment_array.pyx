@@ -1,6 +1,6 @@
 from typing import List
 from ..errors import Errors
-import numpy
+import nlcpy as numpy
 from libc.stdint cimport int32_t
 
 

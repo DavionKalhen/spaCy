@@ -1,5 +1,5 @@
 from libcpp.vector cimport vector
-cimport numpy as np
+cimport nlcpy as np
 
 cdef class AlignmentArray:
     cdef np.ndarray _data

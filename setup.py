@@ -135,7 +135,7 @@ class build_ext_subclass(build_ext, build_ext_options):
 
 
 # Include the git version in the build (adapted from nlcpy)
-# Copyright (c) 2005-2020, NumPy Developers.
+# Copyright (c) 2005-2020, nlcpy Developers.
 # BSD 3-Clause license, see licenses/3rd_party_licenses.txt
 def write_git_info_py(filename="spacy/git_info.py"):
     def _minimal_ext_cmd(cmd):
@@ -203,7 +203,7 @@ def setup_package():
             print(f"Copied {copy_file} -> {target_dir}")
 
     include_dirs = [
-        numpy.get_include(),
+        nlcpy.get_include(),
         get_python_inc(plat_specific=True),
     ]
     ext_modules = []

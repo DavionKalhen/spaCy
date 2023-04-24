@@ -39,7 +39,7 @@ def test_issue3288(en_vocab):
     heads = [1, 1, 1, 4, 4, 6, 4, 4]
     deps = ["intj", "ROOT", "punct", "advmod", "ROOT", "det", "nsubj", "punct"]
     doc = Doc(en_vocab, words=words, heads=heads, deps=deps)
-    doc.tensor = numpy.zeros((len(words), 96), dtype="float32")
+    doc.tensor = nlcpy.zeros((len(words), 96), dtype="float32")
     displacy.render(doc)
 
 

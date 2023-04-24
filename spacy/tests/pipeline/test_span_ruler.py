@@ -238,7 +238,7 @@ def test_span_ruler_scorer(overlapping_patterns):
 
 @pytest.mark.parametrize("n_process", [1, 2])
 def test_span_ruler_multiprocessing(n_process):
-    if isinstance(get_current_ops, NumpyOps) or n_process < 2:
+    if isinstance(get_current_ops, nlcpyOps) or n_process < 2:
         texts = ["I enjoy eating Pizza Hut pizza."]
 
         patterns = [{"label": "FASTFOOD", "pattern": "Pizza Hut"}]

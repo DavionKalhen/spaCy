@@ -281,7 +281,7 @@ def test_attributeruler_serialize(nlp, pattern_dicts):
     a_reloaded = AttributeRuler(nlp.vocab).from_bytes(a.to_bytes())
     assert a.to_bytes() == a_reloaded.to_bytes()
     doc1 = a_reloaded(nlp.make_doc(text))
-    numpy.array_equal(doc.to_array(attrs), doc1.to_array(attrs))
+    nlcpy.array_equal(doc.to_array(attrs), doc1.to_array(attrs))
     assert a.patterns == a_reloaded.patterns
     # disk roundtrip
     with make_tempdir() as tmp_dir:
@@ -289,5 +289,5 @@ def test_attributeruler_serialize(nlp, pattern_dicts):
         nlp2 = util.load_model_from_path(tmp_dir)
         doc2 = nlp2(text)
         assert nlp2.get_pipe("attribute_ruler").to_bytes() == a.to_bytes()
-        assert numpy.array_equal(doc.to_array(attrs), doc2.to_array(attrs))
+        assert nlcpy.array_equal(doc.to_array(attrs), doc2.to_array(attrs))
         assert a.patterns == nlp2.get_pipe("attribute_ruler").patterns

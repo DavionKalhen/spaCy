@@ -37,8 +37,8 @@ def test_vectors_similarity_LL(vocab, vectors):
     assert lex2.vector_norm != 0
     assert lex1.vector[0] != lex2.vector[0] and lex1.vector[1] != lex2.vector[1]
     assert isinstance(lex1.similarity(lex2), float)
-    assert numpy.isclose(lex1.similarity(lex2), get_cosine(vec1, vec2))
-    assert numpy.isclose(lex2.similarity(lex2), lex1.similarity(lex1))
+    assert nlcpy.isclose(lex1.similarity(lex2), get_cosine(vec1, vec2))
+    assert nlcpy.isclose(lex2.similarity(lex2), lex1.similarity(lex1))
 
 
 def test_vectors_similarity_TT(vocab, vectors):
@@ -50,8 +50,8 @@ def test_vectors_similarity_TT(vocab, vectors):
     assert doc[1].vector_norm != 0
     assert doc[0].vector[0] != doc[1].vector[0] and doc[0].vector[1] != doc[1].vector[1]
     assert isinstance(doc[0].similarity(doc[1]), float)
-    assert numpy.isclose(doc[0].similarity(doc[1]), get_cosine(vec1, vec2))
-    assert numpy.isclose(doc[1].similarity(doc[0]), doc[0].similarity(doc[1]))
+    assert nlcpy.isclose(doc[0].similarity(doc[1]), get_cosine(vec1, vec2))
+    assert nlcpy.isclose(doc[1].similarity(doc[0]), doc[0].similarity(doc[1]))
 
 
 def test_vectors_similarity_SS(vocab, vectors):

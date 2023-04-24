@@ -173,8 +173,8 @@ def test_issue5551(textcat_config):
     # All results should be the same because of the fixed seed
     assert len(results) == 3
     ops = get_current_ops()
-    assert_almost_equal(ops.to_numpy(results[0]), ops.to_numpy(results[1]), decimal=5)
-    assert_almost_equal(ops.to_numpy(results[0]), ops.to_numpy(results[2]), decimal=5)
+    assert_almost_equal(ops.to_nlcpy(results[0]), ops.to_nlcpy(results[1]), decimal=5)
+    assert_almost_equal(ops.to_nlcpy(results[0]), ops.to_nlcpy(results[2]), decimal=5)
 
 
 CONFIG_ISSUE_6908 = """
@@ -315,7 +315,7 @@ def test_simple_train():
 @pytest.mark.skip(reason="Test is flakey when run with others")
 def test_textcat_learns_multilabel():
     random.seed(5)
-    numpy.random.seed(5)
+    nlcpy.random.seed(5)
     docs = []
     nlp = Language()
     letters = ["a", "b", "c"]

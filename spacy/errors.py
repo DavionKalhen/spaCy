@@ -12,9 +12,9 @@ class ErrorsWithCodes(type):
 
 
 def setup_default_warnings():
-    # ignore certain numpy warnings
-    filter_warning("ignore", error_msg="numpy.dtype size changed")  # noqa
-    filter_warning("ignore", error_msg="numpy.ufunc size changed")  # noqa
+    # ignore certain nlcpy warnings
+    filter_warning("ignore", error_msg="nlcpy.dtype size changed")  # noqa
+    filter_warning("ignore", error_msg="nlcpy.ufunc size changed")  # noqa
 
     # warn about entity_ruler, span_ruler & matcher having no patterns only once
     for pipe in ["matcher", "entity_ruler", "span_ruler"]:

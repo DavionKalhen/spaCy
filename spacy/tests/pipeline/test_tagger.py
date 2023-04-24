@@ -86,8 +86,8 @@ def test_label_smoothing():
         [eg.predicted for eg in train_examples]
     )
     ops = get_current_ops()
-    no_ls_grads = ops.to_numpy(tagger_no_ls.get_loss(train_examples, tag_scores)[1][0])
-    ls_grads = ops.to_numpy(tagger_ls.get_loss(train_examples, tag_scores)[1][0])
+    no_ls_grads = ops.to_nlcpy(tagger_no_ls.get_loss(train_examples, tag_scores)[1][0])
+    ls_grads = ops.to_nlcpy(tagger_ls.get_loss(train_examples, tag_scores)[1][0])
     assert_almost_equal(ls_grads / no_ls_grads, 0.925)
 
 

@@ -65,7 +65,7 @@ def test_issue2396(en_vocab):
     words = ["She", "created", "a", "test", "for", "spacy"]
     heads = [1, 1, 3, 1, 3, 4]
     deps = ["dep"] * len(heads)
-    matrix = numpy.array(
+    matrix = nlcpy.array(
         [
             [0, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1],
@@ -74,7 +74,7 @@ def test_issue2396(en_vocab):
             [1, 1, 3, 3, 4, 4],
             [1, 1, 3, 3, 4, 5],
         ],
-        dtype=numpy.int32,
+        dtype=nlcpy.int32,
     )
     doc = Doc(en_vocab, words=words, heads=heads, deps=deps)
     span = doc[:]
@@ -234,7 +234,7 @@ def test_issue4903():
     nlp.add_pipe("sentencizer")
     nlp.add_pipe("my_pipe", after="sentencizer")
     text = ["I like bananas.", "Do you like them?", "No, I prefer wasabi."]
-    if isinstance(get_current_ops(), NumpyOps):
+    if isinstance(get_current_ops(), nlcpyOps):
         docs = list(nlp.pipe(text, n_process=2))
         assert docs[0].text == "I like bananas."
         assert docs[1].text == "Do you like them?"
@@ -255,7 +255,7 @@ def test_issue5048(en_vocab):
     pos = [strings.add(p) for p in pos_s]
     tags = [strings.add(t) for t in tags_s]
     attrs = [POS, DEP, TAG]
-    array = numpy.array(list(zip(pos, deps, tags)), dtype="uint64")
+    array = nlcpy.array(list(zip(pos, deps, tags)), dtype="uint64")
     doc = Doc(en_vocab, words=words, spaces=spaces)
     doc.from_array(attrs, array)
     v1 = [(token.text, token.pos_, token.tag_) for token in doc]
@@ -464,7 +464,7 @@ def test_doc_api_right_edge(en_vocab):
 def test_doc_api_has_vector():
     vocab = Vocab()
     vocab.reset_vectors(width=2)
-    vocab.set_vector("kitten", vector=numpy.asarray([0.0, 2.0], dtype="f"))
+    vocab.set_vector("kitten", vector=nlcpy.asarray([0.0, 2.0], dtype="f"))
     doc = Doc(vocab, words=["kitten"])
     assert doc.has_vector
 
@@ -485,12 +485,12 @@ def test_doc_api_similarity_match():
         (
             ["the", "lazy", "dog", "slept"],
             [2, 2, 3, 3],
-            numpy.array([[0, 2, 2, 3], [2, 1, 2, 3], [2, 2, 2, 3], [3, 3, 3, 3]]),
+            nlcpy.array([[0, 2, 2, 3], [2, 1, 2, 3], [2, 2, 2, 3], [3, 3, 3, 3]]),
         ),
         (
             ["The", "lazy", "dog", "slept", ".", "The", "quick", "fox", "jumped"],
             [2, 2, 3, 3, 3, 7, 7, 8, 8],
-            numpy.array(
+            nlcpy.array(
                 [
                     [0, 2, 2, 3, 3, -1, -1, -1, -1],
                     [2, 1, 2, 3, 3, -1, -1, -1, -1],
@@ -522,7 +522,7 @@ def test_doc_is_nered(en_vocab):
     doc.ents = [Span(doc, 3, 5, label="GPE")]
     assert doc.has_annotation("ENT_IOB")
     # Test creating doc from array with unknown values
-    arr = numpy.array([[0, 0], [0, 0], [0, 0], [384, 3], [384, 1]], dtype="uint64")
+    arr = nlcpy.array([[0, 0], [0, 0], [0, 0], [384, 3], [384, 1]], dtype="uint64")
     doc = Doc(en_vocab, words=words).from_array([ENT_TYPE, ENT_IOB], arr)
     assert doc.has_annotation("ENT_IOB")
     # Test serialization
@@ -678,8 +678,8 @@ def test_doc_api_from_docs(en_tokenizer, de_tokenizer):
         doc.tensor = ops.asarray([[len(t.text), 0.0] for t in doc])
     m_doc = Doc.from_docs(en_docs)
     assert_array_equal(
-        ops.to_numpy(m_doc.tensor),
-        ops.to_numpy(ops.xp.vstack([doc.tensor for doc in en_docs if len(doc)])),
+        ops.to_nlcpy(m_doc.tensor),
+        ops.to_nlcpy(ops.xp.vstack([doc.tensor for doc in en_docs if len(doc)])),
     )
 
     # can exclude tensor

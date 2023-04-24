@@ -8,7 +8,7 @@ from spacy.tokens import Doc, Token
 @pytest.mark.issue(3540)
 def test_issue3540(en_vocab):
     words = ["I", "live", "in", "NewYork", "right", "now"]
-    tensor = numpy.asarray(
+    tensor = nlcpy.asarray(
         [[1.0, 1.1], [2.0, 2.1], [3.0, 3.1], [4.0, 4.1], [5.0, 5.1], [6.0, 6.1]],
         dtype="f",
     )

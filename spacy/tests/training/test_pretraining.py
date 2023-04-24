@@ -344,9 +344,9 @@ def write_vectors_model(tmp_dir):
 
     vocab = Vocab()
     vector_data = {
-        "dog": numpy.random.uniform(-1, 1, (300,)),
-        "cat": numpy.random.uniform(-1, 1, (300,)),
-        "orange": numpy.random.uniform(-1, 1, (300,)),
+        "dog": nlcpy.random.uniform(-1, 1, (300,)),
+        "cat": nlcpy.random.uniform(-1, 1, (300,)),
+        "orange": nlcpy.random.uniform(-1, 1, (300,)),
     }
     for word, vector in vector_data.items():
         vocab.set_vector(word, vector)

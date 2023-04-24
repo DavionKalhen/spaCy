@@ -15,8 +15,8 @@ def test_issue2203(en_vocab):
     lemma_ids = [en_vocab.strings.add(lemma) for lemma in lemmas]
     doc = Doc(en_vocab, words=words)
     # Work around lemma corruption problem and set lemmas after tags
-    doc.from_array("TAG", numpy.array(tag_ids, dtype="uint64"))
-    doc.from_array("LEMMA", numpy.array(lemma_ids, dtype="uint64"))
+    doc.from_array("TAG", nlcpy.array(tag_ids, dtype="uint64"))
+    doc.from_array("LEMMA", nlcpy.array(lemma_ids, dtype="uint64"))
     assert [t.tag_ for t in doc] == tags
     assert [t.lemma_ for t in doc] == lemmas
     # We need to serialize both tag and lemma, since this is what causes the bug
@@ -123,14 +123,14 @@ def test_doc_from_array_heads_in_bounds(en_vocab):
 
     # head before start
     arr = doc.to_array(["HEAD"])
-    arr[0] = numpy.int32(-1).astype(numpy.uint64)
+    arr[0] = nlcpy.int32(-1).astype(nlcpy.uint64)
     doc_from_array = Doc(en_vocab, words=words)
     with pytest.raises(ValueError):
         doc_from_array.from_array(["HEAD"], arr)
 
     # head after end
     arr = doc.to_array(["HEAD"])
-    arr[0] = numpy.int32(5).astype(numpy.uint64)
+    arr[0] = nlcpy.int32(5).astype(nlcpy.uint64)
     doc_from_array = Doc(en_vocab, words=words)
     with pytest.raises(ValueError):
         doc_from_array.from_array(["HEAD"], arr)

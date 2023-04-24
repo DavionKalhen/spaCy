@@ -11,7 +11,7 @@ from spacy.lang.en import English
 from spacy.lang.de import German
 from spacy.util import registry, ignore_error, raise_error, find_matching_language
 import spacy
-from thinc.api import CupyOps, NumpyOps, get_current_ops
+from thinc.api import CupyOps, nlcpyOps, get_current_ops
 
 from .util import add_vecs_to_vocab, assert_docs_equal
 
@@ -286,7 +286,7 @@ def texts():
 @pytest.mark.parametrize("n_process", [1, 2])
 def test_language_pipe(nlp2, n_process, texts):
     ops = get_current_ops()
-    if isinstance(ops, NumpyOps) or n_process < 2:
+    if isinstance(ops, nlcpyOps) or n_process < 2:
         texts = texts * 10
         expecteds = [nlp2(text) for text in texts]
         docs = nlp2.pipe(texts, n_process=n_process, batch_size=2)
@@ -298,7 +298,7 @@ def test_language_pipe(nlp2, n_process, texts):
 @pytest.mark.parametrize("n_process", [1, 2])
 def test_language_pipe_stream(nlp2, n_process, texts):
     ops = get_current_ops()
-    if isinstance(ops, NumpyOps) or n_process < 2:
+    if isinstance(ops, nlcpyOps) or n_process < 2:
         # check if nlp.pipe can handle infinite length iterator properly.
         stream_texts = itertools.cycle(texts)
         texts0, texts1 = itertools.tee(stream_texts)
@@ -314,7 +314,7 @@ def test_language_pipe_stream(nlp2, n_process, texts):
 def test_language_pipe_error_handler(n_process):
     """Test that the error handling of nlp.pipe works well"""
     ops = get_current_ops()
-    if isinstance(ops, NumpyOps) or n_process < 2:
+    if isinstance(ops, nlcpyOps) or n_process < 2:
         nlp = English()
         nlp.add_pipe("merge_subtokens")
         nlp.initialize()
@@ -339,7 +339,7 @@ def test_language_pipe_error_handler_custom(en_vocab, n_process):
     """Test the error handling of a custom component that has no pipe method"""
     Language.component("my_evil_component", func=evil_component)
     ops = get_current_ops()
-    if isinstance(ops, NumpyOps) or n_process < 2:
+    if isinstance(ops, nlcpyOps) or n_process < 2:
         nlp = English()
         nlp.add_pipe("my_evil_component")
         texts = ["TEXT 111", "TEXT 222", "TEXT 333", "TEXT 342", "TEXT 666"]
@@ -367,7 +367,7 @@ def test_language_pipe_error_handler_input_as_tuples(en_vocab, n_process):
     """Test the error handling of nlp.pipe with input as tuples"""
     Language.component("my_evil_component", func=evil_component)
     ops = get_current_ops()
-    if isinstance(ops, NumpyOps) or n_process < 2:
+    if isinstance(ops, nlcpyOps) or n_process < 2:
         nlp = English()
         nlp.add_pipe("my_evil_component")
         texts = [
@@ -400,7 +400,7 @@ def test_language_pipe_error_handler_pipe(en_vocab, n_process):
     Language.component("my_perhaps_sentences", func=perhaps_set_sentences)
     Language.component("assert_sents_error", func=assert_sents_error)
     ops = get_current_ops()
-    if isinstance(ops, NumpyOps) or n_process < 2:
+    if isinstance(ops, nlcpyOps) or n_process < 2:
         texts = [f"{str(i)} is enough. Done" for i in range(100)]
         nlp = English()
         nlp.add_pipe("my_perhaps_sentences")
@@ -421,7 +421,7 @@ def test_language_pipe_error_handler_make_doc_actual(n_process):
     # TODO: fix so that the following test is the actual behavior
 
     ops = get_current_ops()
-    if isinstance(ops, NumpyOps) or n_process < 2:
+    if isinstance(ops, nlcpyOps) or n_process < 2:
         nlp = English()
         nlp.max_length = 10
         texts = ["12345678901234567890", "12345"] * 10
@@ -442,7 +442,7 @@ def test_language_pipe_error_handler_make_doc_preferred(n_process):
     """Test the error handling for make_doc"""
 
     ops = get_current_ops()
-    if isinstance(ops, NumpyOps) or n_process < 2:
+    if isinstance(ops, nlcpyOps) or n_process < 2:
         nlp = English()
         nlp.max_length = 10
         texts = ["12345678901234567890", "12345"] * 10
@@ -736,7 +736,7 @@ def test_pass_doc_to_pipeline(nlp, n_process):
     doc = nlp(docs[0])
     assert doc.text == texts[0]
     assert len(doc.cats) > 0
-    if isinstance(get_current_ops(), NumpyOps) or n_process < 2:
+    if isinstance(get_current_ops(), nlcpyOps) or n_process < 2:
         docs = nlp.pipe(docs, n_process=n_process)
         assert [doc.text for doc in docs] == texts
         assert all(len(doc.cats) for doc in docs)

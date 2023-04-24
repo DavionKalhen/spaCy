@@ -29,7 +29,7 @@ def get_docs():
     for t in texts:
         for word in t.split():
             hash_id = vocab.strings.add(word)
-            vector = numpy.random.uniform(-1, 1, (7,))
+            vector = nlcpy.random.uniform(-1, 1, (7,))
             vocab.set_vector(hash_id, vector)
     docs = [English(vocab)(t) for t in texts]
     return docs
@@ -83,7 +83,7 @@ def util_batch_unbatch_docs_list(
         Y_not_batched = [model.predict([u])[0] for u in in_data]
         for i in range(len(Y_batched)):
             assert_almost_equal(
-                OPS.to_numpy(Y_batched[i]), OPS.to_numpy(Y_not_batched[i]), decimal=4
+                OPS.to_nlcpy(Y_batched[i]), OPS.to_nlcpy(Y_not_batched[i]), decimal=4
             )
 
 

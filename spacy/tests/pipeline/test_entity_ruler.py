@@ -88,7 +88,7 @@ def test_issue4849(entity_ruler_factory):
         count_ents += len([ent for ent in doc.ents if ent.ent_id > 0])
     assert count_ents == 2
     # USING 2 PROCESSES
-    if isinstance(get_current_ops, NumpyOps):
+    if isinstance(get_current_ops, nlcpyOps):
         count_ents = 0
         for doc in nlp.pipe([text], n_process=2):
             count_ents += len([ent for ent in doc.ents if ent.ent_id > 0])
@@ -422,7 +422,7 @@ def test_entity_ruler_fuzzy_disabled(nlp, entity_ruler_factory):
 @pytest.mark.parametrize("n_process", [1, 2])
 @pytest.mark.parametrize("entity_ruler_factory", ENTITY_RULERS)
 def test_entity_ruler_multiprocessing(nlp, n_process, entity_ruler_factory):
-    if isinstance(get_current_ops, NumpyOps) or n_process < 2:
+    if isinstance(get_current_ops, nlcpyOps) or n_process < 2:
         texts = ["I enjoy eating Pizza Hut pizza."]
 
         patterns = [{"label": "FASTFOOD", "pattern": "Pizza Hut", "id": "1234"}]

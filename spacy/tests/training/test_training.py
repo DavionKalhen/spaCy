@@ -330,7 +330,7 @@ def test_example_constructor(en_vocab):
     tag_ids = [en_vocab.strings.add(tag) for tag in tags]
     predicted = Doc(en_vocab, words=words)
     reference = Doc(en_vocab, words=words)
-    reference = reference.from_array("TAG", numpy.array(tag_ids, dtype="uint64"))
+    reference = reference.from_array("TAG", nlcpy.array(tag_ids, dtype="uint64"))
     example = Example(predicted, reference)
     tags = example.get_aligned("TAG", as_string=True)
     assert tags == ["NOUN", "VERB", "NOUN"]

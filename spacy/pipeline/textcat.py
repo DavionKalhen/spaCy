@@ -297,10 +297,10 @@ class TextCategorizer(TrainablePipe):
 
     def _examples_to_truth(
         self, examples: Iterable[Example]
-    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
+    ) -> Tuple[nlcpy.ndarray, nlcpy.ndarray]:
         nr_examples = len(list(examples))
-        truths = numpy.zeros((nr_examples, len(self.labels)), dtype="f")
-        not_missing = numpy.ones((nr_examples, len(self.labels)), dtype="f")
+        truths = nlcpy.zeros((nr_examples, len(self.labels)), dtype="f")
+        not_missing = nlcpy.ones((nr_examples, len(self.labels)), dtype="f")
         for i, eg in enumerate(examples):
             for j, label in enumerate(self.labels):
                 if label in eg.reference.cats:

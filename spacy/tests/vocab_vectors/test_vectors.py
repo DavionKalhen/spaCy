@@ -34,12 +34,12 @@ def vectors():
 
 @pytest.fixture
 def data():
-    return numpy.asarray([[0.0, 1.0, 2.0], [3.0, -2.0, 4.0]], dtype="f")
+    return nlcpy.asarray([[0.0, 1.0, 2.0], [3.0, -2.0, 4.0]], dtype="f")
 
 
 @pytest.fixture
 def most_similar_vectors_data():
-    return numpy.asarray(
+    return nlcpy.asarray(
         [[0.0, 1.0, 2.0], [1.0, -2.0, 4.0], [1.0, 1.0, -1.0], [2.0, 3.0, 1.0]],
         dtype="f",
     )
@@ -52,7 +52,7 @@ def most_similar_vectors_keys():
 
 @pytest.fixture
 def resize_data():
-    return numpy.asarray([[0.0, 1.0], [2.0, 3.0]], dtype="f")
+    return nlcpy.asarray([[0.0, 1.0], [2.0, 3.0]], dtype="f")
 
 
 @pytest.fixture()
@@ -86,7 +86,7 @@ def test_issue1807():
     """Test vocab.set_vector also adds the word to the vocab."""
     vocab = Vocab(vectors_name="test_issue1807")
     assert "hello" not in vocab
-    vocab.set_vector("hello", numpy.ones((50,), dtype="f"))
+    vocab.set_vector("hello", nlcpy.ones((50,), dtype="f"))
     assert "hello" in vocab
 
 
@@ -96,7 +96,7 @@ def test_issue2871():
     words = ["dog", "cat", "SUFFIX"]
     vocab = Vocab(vectors_name="test_issue2871")
     vocab.vectors.resize(shape=(3, 10))
-    vector_data = numpy.zeros((3, 10), dtype="f")
+    vector_data = nlcpy.zeros((3, 10), dtype="f")
     for word in words:
         _ = vocab[word]  # noqa: F841
         vocab.set_vector(word, vector_data[0])
@@ -111,22 +111,22 @@ def test_issue2871():
 
 @pytest.mark.issue(3412)
 def test_issue3412():
-    data = numpy.asarray([[0, 0, 0], [1, 2, 3], [9, 8, 7]], dtype="f")
+    data = nlcpy.asarray([[0, 0, 0], [1, 2, 3], [9, 8, 7]], dtype="f")
     vectors = Vectors(data=data, keys=["A", "B", "C"])
     keys, best_rows, scores = vectors.most_similar(
-        numpy.asarray([[9, 8, 7], [0, 0, 0]], dtype="f")
+        nlcpy.asarray([[9, 8, 7], [0, 0, 0]], dtype="f")
     )
     assert best_rows[0] == 2
 
 
 @pytest.mark.issue(4725)
 def test_issue4725_2():
-    if isinstance(get_current_ops, NumpyOps):
+    if isinstance(get_current_ops, nlcpyOps):
         # ensures that this runs correctly and doesn't hang or crash because of the global vectors
         # if it does crash, it's usually because of calling 'spawn' for multiprocessing (e.g. on Windows),
         # or because of issues with pickling the NER (cf test_issue4725_1)
         vocab = Vocab(vectors_name="test_vocab_add_vector")
-        data = numpy.ndarray((5, 3), dtype="f")
+        data = nlcpy.ndarray((5, 3), dtype="f")
         data[0] = 1.0
         data[1] = 2.0
         vocab.set_vector("cat", data[0])
@@ -222,13 +222,13 @@ def test_vectors_most_similar(most_similar_vectors_data, most_similar_vectors_ke
 
 def test_vectors_most_similar_identical():
     """Test that most similar identical vectors are assigned a score of 1.0."""
-    data = numpy.asarray([[4, 2, 2, 2], [4, 2, 2, 2], [1, 1, 1, 1]], dtype="f")
+    data = nlcpy.asarray([[4, 2, 2, 2], [4, 2, 2, 2], [1, 1, 1, 1]], dtype="f")
     v = Vectors(data=data, keys=["A", "B", "C"])
-    keys, _, scores = v.most_similar(numpy.asarray([[4, 2, 2, 2]], dtype="f"))
+    keys, _, scores = v.most_similar(nlcpy.asarray([[4, 2, 2, 2]], dtype="f"))
     assert scores[0][0] == 1.0  # not 1.0000002
-    data = numpy.asarray([[1, 2, 3], [1, 2, 3], [1, 1, 1]], dtype="f")
+    data = nlcpy.asarray([[1, 2, 3], [1, 2, 3], [1, 1, 1]], dtype="f")
     v = Vectors(data=data, keys=["A", "B", "C"])
-    keys, _, scores = v.most_similar(numpy.asarray([[1, 2, 3]], dtype="f"))
+    keys, _, scores = v.most_similar(nlcpy.asarray([[1, 2, 3]], dtype="f"))
     assert scores[0][0] == 1.0  # not 0.9999999
 
 
@@ -382,26 +382,26 @@ def test_vectors_serialize():
     b = v.to_bytes()
     v_r = Vectors()
     v_r.from_bytes(b)
-    assert_equal(OPS.to_numpy(v.data), OPS.to_numpy(v_r.data))
+    assert_equal(OPS.to_nlcpy(v.data), OPS.to_nlcpy(v_r.data))
     assert v.key2row == v_r.key2row
     v.resize((5, 4))
     v_r.resize((5, 4))
     row = v.add("D", vector=OPS.asarray([1, 2, 3, 4], dtype="f"))
     row_r = v_r.add("D", vector=OPS.asarray([1, 2, 3, 4], dtype="f"))
     assert row == row_r
-    assert_equal(OPS.to_numpy(v.data), OPS.to_numpy(v_r.data))
+    assert_equal(OPS.to_nlcpy(v.data), OPS.to_nlcpy(v_r.data))
     assert v.is_full == v_r.is_full
     with make_tempdir() as d:
         v.to_disk(d)
         v_r.from_disk(d)
-        assert_equal(OPS.to_numpy(v.data), OPS.to_numpy(v_r.data))
+        assert_equal(OPS.to_nlcpy(v.data), OPS.to_nlcpy(v_r.data))
         assert v.key2row == v_r.key2row
         v.resize((5, 4))
         v_r.resize((5, 4))
         row = v.add("D", vector=OPS.asarray([10, 20, 30, 40], dtype="f"))
         row_r = v_r.add("D", vector=OPS.asarray([10, 20, 30, 40], dtype="f"))
         assert row == row_r
-        assert_equal(OPS.to_numpy(v.data), OPS.to_numpy(v_r.data))
+        assert_equal(OPS.to_nlcpy(v.data), OPS.to_nlcpy(v_r.data))
 
 
 def test_vector_is_oov():
@@ -450,7 +450,7 @@ def test_vectors_get_batch():
     words = ["C", "B", "A", v.strings["B"]]
     rows = v.find(keys=words)
     vecs = OPS.as_contig(v.data[rows])
-    assert_equal(OPS.to_numpy(vecs), OPS.to_numpy(v.get_batch(words)))
+    assert_equal(OPS.to_nlcpy(vecs), OPS.to_nlcpy(v.get_batch(words)))
 
 
 def test_vectors_deduplicate():
@@ -470,8 +470,8 @@ def test_vectors_deduplicate():
     assert vocab.vectors.shape[0] == 3
     # the uniqued data is the same as the deduplicated data
     assert_equal(
-        numpy.unique(OPS.to_numpy(vocab.vectors.data), axis=0),
-        OPS.to_numpy(vocab.vectors.data),
+        nlcpy.unique(OPS.to_nlcpy(vocab.vectors.data), axis=0),
+        OPS.to_nlcpy(vocab.vectors.data),
     )
     # duplicate vectors use the same keys now
     assert (
@@ -552,8 +552,8 @@ def test_floret_vectors(floret_vectors_vec_str, floret_vectors_hashvec_str):
         dtype="uint32",
     )
     assert_equal(
-        OPS.to_numpy(rows),
-        numpy.asarray([5, 6, 7, 5, 8, 2, 8, 9, 3, 3, 4, 6, 7, 3, 0, 2]),
+        OPS.to_nlcpy(rows),
+        nlcpy.asarray([5, 6, 7, 5, 8, 2, 8, 9, 3, 3, 4, 6, 7, 3, 0, 2]),
     )
     assert len(rows) == len(ngrams) * nlp.vocab.vectors.hash_count
     # all vectors are equivalent for plain static table vs. hash ngrams
@@ -572,24 +572,24 @@ def test_floret_vectors(floret_vectors_vec_str, floret_vectors_hashvec_str):
 
     # check that single and batched vector lookups are identical
     words = [s for s in nlp_plain.vocab.vectors]
-    single_vecs = OPS.to_numpy(OPS.asarray([nlp.vocab[word].vector for word in words]))
-    batch_vecs = OPS.to_numpy(nlp.vocab.vectors.get_batch(words))
+    single_vecs = OPS.to_nlcpy(OPS.asarray([nlp.vocab[word].vector for word in words]))
+    batch_vecs = OPS.to_nlcpy(nlp.vocab.vectors.get_batch(words))
     assert_equal(single_vecs, batch_vecs)
 
     # an empty key returns 0s
     assert_equal(
-        OPS.to_numpy(nlp.vocab[""].vector),
-        numpy.zeros((nlp.vocab.vectors.shape[0],)),
+        OPS.to_nlcpy(nlp.vocab[""].vector),
+        nlcpy.zeros((nlp.vocab.vectors.shape[0],)),
     )
     # an empty batch returns 0s
     assert_equal(
-        OPS.to_numpy(nlp.vocab.vectors.get_batch([""])),
-        numpy.zeros((1, nlp.vocab.vectors.shape[0])),
+        OPS.to_nlcpy(nlp.vocab.vectors.get_batch([""])),
+        nlcpy.zeros((1, nlp.vocab.vectors.shape[0])),
     )
     # an empty key within a batch returns 0s
     assert_equal(
-        OPS.to_numpy(nlp.vocab.vectors.get_batch(["a", "", "b"])[1]),
-        numpy.zeros((nlp.vocab.vectors.shape[0],)),
+        OPS.to_nlcpy(nlp.vocab.vectors.get_batch(["a", "", "b"])[1]),
+        nlcpy.zeros((nlp.vocab.vectors.shape[0],)),
     )
 
     # the loaded ngram vector table cannot be modified
@@ -618,12 +618,12 @@ def test_floret_vectors(floret_vectors_vec_str, floret_vectors_hashvec_str):
         vocab_r.from_disk(d)
         assert nlp.vocab.vectors.to_bytes() == vocab_r.vectors.to_bytes()
         assert_equal(
-            OPS.to_numpy(nlp.vocab.vectors.data), OPS.to_numpy(vocab_r.vectors.data)
+            OPS.to_nlcpy(nlp.vocab.vectors.data), OPS.to_nlcpy(vocab_r.vectors.data)
         )
         assert_equal(nlp.vocab.vectors._get_cfg(), vocab_r.vectors._get_cfg())
         assert_almost_equal(
-            OPS.to_numpy(nlp.vocab[word].vector),
-            OPS.to_numpy(vocab_r[word].vector),
+            OPS.to_nlcpy(nlp.vocab[word].vector),
+            OPS.to_nlcpy(vocab_r[word].vector),
             decimal=6,
         )
 

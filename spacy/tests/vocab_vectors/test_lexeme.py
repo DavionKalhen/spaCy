@@ -79,5 +79,5 @@ def test_vocab_lexeme_add_flag_provided_id(en_vocab):
 def test_vocab_lexeme_oov_rank(en_vocab):
     """Test that default rank is OOV_RANK."""
     lex = en_vocab["word"]
-    assert OOV_RANK == numpy.iinfo(numpy.uint64).max
+    assert OOV_RANK == nlcpy.iinfo(nlcpy.uint64).max
     assert lex.rank == OOV_RANK

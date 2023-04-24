@@ -1,7 +1,7 @@
 import pytest
 import nlcpy
 from nlcpy.testing import assert_array_equal, assert_almost_equal
-from thinc.api import get_current_ops, NumpyOps, Ragged
+from thinc.api import get_current_ops, nlcpyOps, Ragged
 
 from spacy import util
 from spacy.lang.en import English
@@ -124,11 +124,11 @@ def test_make_spangroup_multilabel(max_positive, nr_results):
     doc = nlp.make_doc("Greater London")
     ngram_suggester = registry.misc.get("spacy.ngram_suggester.v1")(sizes=[1, 2])
     indices = ngram_suggester([doc])[0].dataXd
-    assert_array_equal(OPS.to_numpy(indices), numpy.asarray([[0, 1], [1, 2], [0, 2]]))
+    assert_array_equal(OPS.to_nlcpy(indices), nlcpy.asarray([[0, 1], [1, 2], [0, 2]]))
     labels = ["Thing", "City", "Person", "GreatCity"]
     for label in labels:
         spancat.add_label(label)
-    scores = numpy.asarray(
+    scores = nlcpy.asarray(
         [[0.2, 0.4, 0.3, 0.1], [0.1, 0.6, 0.2, 0.4], [0.8, 0.7, 0.3, 0.9]], dtype="f"
     )
     spangroup = spancat._make_span_group_multilabel(doc, indices, scores)
@@ -180,11 +180,11 @@ def test_make_spangroup_singlelabel(threshold, allow_overlap, nr_results):
     doc = nlp.make_doc("Greater London")
     ngram_suggester = registry.misc.get("spacy.ngram_suggester.v1")(sizes=[1, 2])
     indices = ngram_suggester([doc])[0].dataXd
-    assert_array_equal(OPS.to_numpy(indices), numpy.asarray([[0, 1], [1, 2], [0, 2]]))
+    assert_array_equal(OPS.to_nlcpy(indices), nlcpy.asarray([[0, 1], [1, 2], [0, 2]]))
     labels = ["Thing", "City", "Person", "GreatCity"]
     for label in labels:
         spancat.add_label(label)
-    scores = numpy.asarray(
+    scores = nlcpy.asarray(
         [[0.2, 0.4, 0.3, 0.1], [0.1, 0.6, 0.2, 0.4], [0.8, 0.7, 0.3, 0.9]], dtype="f"
     )
     spangroup = spancat._make_span_group_singlelabel(
@@ -244,8 +244,8 @@ def test_make_spangroup_negative_label():
         spancat_single.add_label(label)
     ngram_suggester = registry.misc.get("spacy.ngram_suggester.v1")(sizes=[1, 2])
     indices = ngram_suggester([doc])[0].dataXd
-    assert_array_equal(OPS.to_numpy(indices), numpy.asarray([[0, 1], [1, 2], [0, 2]]))
-    scores = numpy.asarray(
+    assert_array_equal(OPS.to_nlcpy(indices), nlcpy.asarray([[0, 1], [1, 2], [0, 2]]))
+    scores = nlcpy.asarray(
         [
             [0.2, 0.4, 0.3, 0.1, 0.1],
             [0.1, 0.6, 0.2, 0.4, 0.9],
@@ -319,7 +319,7 @@ def test_ngram_suggester(en_tokenizer):
             offset += ngrams.lengths[i]
         # the number of spans is correct
         assert_array_equal(
-            OPS.to_numpy(ngrams.lengths),
+            OPS.to_nlcpy(ngrams.lengths),
             [max(0, len(doc) - (size - 1)) for doc in docs],
         )
 
@@ -329,9 +329,9 @@ def test_ngram_suggester(en_tokenizer):
         en_tokenizer(text) for text in ["a", "a b", "a b c", "a b c d", "a b c d e"]
     ]
     ngrams = ngram_suggester(docs)
-    assert_array_equal(OPS.to_numpy(ngrams.lengths), [1, 3, 6, 9, 12])
+    assert_array_equal(OPS.to_nlcpy(ngrams.lengths), [1, 3, 6, 9, 12])
     assert_array_equal(
-        OPS.to_numpy(ngrams.data),
+        OPS.to_nlcpy(ngrams.data),
         [
             # doc 0
             [0, 1],
@@ -376,13 +376,13 @@ def test_ngram_suggester(en_tokenizer):
     ngram_suggester = registry.misc.get("spacy.ngram_suggester.v1")(sizes=[1])
     docs = [en_tokenizer(text) for text in ["", "a", ""]]
     ngrams = ngram_suggester(docs)
-    assert_array_equal(OPS.to_numpy(ngrams.lengths), [len(doc) for doc in docs])
+    assert_array_equal(OPS.to_nlcpy(ngrams.lengths), [len(doc) for doc in docs])
 
     # test all empty docs
     ngram_suggester = registry.misc.get("spacy.ngram_suggester.v1")(sizes=[1])
     docs = [en_tokenizer(text) for text in ["", "", ""]]
     ngrams = ngram_suggester(docs)
-    assert_array_equal(OPS.to_numpy(ngrams.lengths), [len(doc) for doc in docs])
+    assert_array_equal(OPS.to_nlcpy(ngrams.lengths), [len(doc) for doc in docs])
 
 
 def test_ngram_sizes(en_tokenizer):
@@ -395,15 +395,15 @@ def test_ngram_sizes(en_tokenizer):
     ]
     ngrams_1 = size_suggester(docs)
     ngrams_2 = range_suggester(docs)
-    assert_array_equal(OPS.to_numpy(ngrams_1.lengths), [1, 3, 6, 9, 12])
-    assert_array_equal(OPS.to_numpy(ngrams_1.lengths), OPS.to_numpy(ngrams_2.lengths))
-    assert_array_equal(OPS.to_numpy(ngrams_1.data), OPS.to_numpy(ngrams_2.data))
+    assert_array_equal(OPS.to_nlcpy(ngrams_1.lengths), [1, 3, 6, 9, 12])
+    assert_array_equal(OPS.to_nlcpy(ngrams_1.lengths), OPS.to_nlcpy(ngrams_2.lengths))
+    assert_array_equal(OPS.to_nlcpy(ngrams_1.data), OPS.to_nlcpy(ngrams_2.data))
 
     # one more variation
     suggester_factory = registry.misc.get("spacy.ngram_range_suggester.v1")
     range_suggester = suggester_factory(min_size=2, max_size=4)
     ngrams_3 = range_suggester(docs)
-    assert_array_equal(OPS.to_numpy(ngrams_3.lengths), [0, 1, 3, 6, 9])
+    assert_array_equal(OPS.to_nlcpy(ngrams_3.lengths), [0, 1, 3, 6, 9])
 
 
 def test_overfitting_IO():
@@ -582,7 +582,7 @@ def test_set_candidates(name):
 @pytest.mark.parametrize("name", SPANCAT_COMPONENTS)
 @pytest.mark.parametrize("n_process", [1, 2])
 def test_spancat_multiprocessing(name, n_process):
-    if isinstance(get_current_ops, NumpyOps) or n_process < 2:
+    if isinstance(get_current_ops, nlcpyOps) or n_process < 2:
         nlp = Language()
         spancat = nlp.add_pipe(name, config={"spans_key": SPAN_KEY})
         train_examples = make_examples(nlp)

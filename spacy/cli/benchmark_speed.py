@@ -78,16 +78,16 @@ class Quartiles:
     q3: float
     iqr: float
 
-    def __init__(self, sample: numpy.ndarray) -> None:
-        self.q1 = numpy.quantile(sample, 0.25)
-        self.q2 = numpy.quantile(sample, 0.5)
-        self.q3 = numpy.quantile(sample, 0.75)
+    def __init__(self, sample: nlcpy.ndarray) -> None:
+        self.q1 = nlcpy.quantile(sample, 0.25)
+        self.q2 = nlcpy.quantile(sample, 0.5)
+        self.q3 = nlcpy.quantile(sample, 0.75)
         self.iqr = self.q3 - self.q1
 
 
 def annotate(
     nlp: Language, docs: List[Doc], batch_size: Optional[int]
-) -> numpy.ndarray:
+) -> nlcpy.ndarray:
     docs = nlp.pipe(tqdm(docs, unit="doc"), batch_size=batch_size)
     wps = []
     while True:
@@ -100,7 +100,7 @@ def annotate(
         n_tokens = count_tokens(batch_docs)
         wps.append(n_tokens / elapsed.elapsed)
 
-    return numpy.array(wps)
+    return nlcpy.array(wps)
 
 
 def benchmark(
@@ -109,7 +109,7 @@ def benchmark(
     n_batches: int,
     batch_size: int,
     shuffle: bool,
-) -> numpy.ndarray:
+) -> nlcpy.ndarray:
     if shuffle:
         bench_docs = [
             nlp.make_doc(random.choice(docs).text)
@@ -124,14 +124,14 @@ def benchmark(
     return annotate(nlp, bench_docs, batch_size)
 
 
-def bootstrap(x, statistic=numpy.mean, iterations=10000) -> numpy.ndarray:
+def bootstrap(x, statistic=nlcpy.mean, iterations=10000) -> nlcpy.ndarray:
     """Apply a statistic to repeated random samples of an array."""
-    return numpy.fromiter(
+    return nlcpy.fromiter(
         (
-            statistic(numpy.random.choice(x, len(x), replace=True))
+            statistic(nlcpy.random.choice(x, len(x), replace=True))
             for _ in range(iterations)
         ),
-        numpy.float64,
+        nlcpy.float64,
     )
 
 
@@ -139,8 +139,8 @@ def count_tokens(docs: Iterable[Doc]) -> int:
     return sum(len(doc) for doc in docs)
 
 
-def print_mean_with_ci(sample: numpy.ndarray):
-    mean = numpy.mean(sample)
+def print_mean_with_ci(sample: nlcpy.ndarray):
+    mean = nlcpy.mean(sample)
     bootstrap_means = bootstrap(sample)
     bootstrap_means.sort()
 
@@ -151,14 +151,14 @@ def print_mean_with_ci(sample: numpy.ndarray):
     print(f"Mean: {mean:.1f} words/s (95% CI: {low-mean:.1f} +{high-mean:.1f})")
 
 
-def print_outliers(sample: numpy.ndarray):
+def print_outliers(sample: nlcpy.ndarray):
     quartiles = Quartiles(sample)
 
-    n_outliers = numpy.sum(
+    n_outliers = nlcpy.sum(
         (sample < (quartiles.q1 - 1.5 * quartiles.iqr))
         | (sample > (quartiles.q3 + 1.5 * quartiles.iqr))
     )
-    n_extreme_outliers = numpy.sum(
+    n_extreme_outliers = nlcpy.sum(
         (sample < (quartiles.q1 - 3.0 * quartiles.iqr))
         | (sample > (quartiles.q3 + 3.0 * quartiles.iqr))
     )
@@ -169,6 +169,6 @@ def print_outliers(sample: numpy.ndarray):
 
 def warmup(
     nlp: Language, docs: List[Doc], warmup_epochs: int, batch_size: Optional[int]
-) -> numpy.ndarray:
+) -> nlcpy.ndarray:
     docs = warmup_epochs * docs
     return annotate(nlp, docs, batch_size)

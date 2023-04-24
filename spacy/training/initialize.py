@@ -209,7 +209,7 @@ def convert_vectors(
     vectors_loc = ensure_path(vectors_loc)
     if vectors_loc and vectors_loc.parts[-1].endswith(".npz"):
         nlp.vocab.vectors = Vectors(
-            strings=nlp.vocab.strings, data=numpy.load(vectors_loc.open("rb"))
+            strings=nlp.vocab.strings, data=nlcpy.load(vectors_loc.open("rb"))
         )
         for lex in nlp.vocab:
             if lex.rank and lex.rank != OOV_RANK:
@@ -280,7 +280,7 @@ def read_vectors(
         assert len(header_parts) == 2
         if truncate_vectors >= 1:
             shape = (truncate_vectors, shape[1])
-    vectors_data = numpy.zeros(shape=shape, dtype="f")
+    vectors_data = nlcpy.zeros(shape=shape, dtype="f")
     vectors_keys = []
     for i, line in enumerate(tqdm.tqdm(f)):
         line = line.rstrip()
@@ -288,7 +288,7 @@ def read_vectors(
         word = pieces.pop(0)
         if len(pieces) != vectors_data.shape[1]:
             raise ValueError(Errors.E094.format(line_num=i, loc=vectors_loc))
-        vectors_data[i] = numpy.asarray(pieces, dtype="f")
+        vectors_data[i] = nlcpy.asarray(pieces, dtype="f")
         vectors_keys.append(word)
         if i == truncate_vectors - 1:
             break

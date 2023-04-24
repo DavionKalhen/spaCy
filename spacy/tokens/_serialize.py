@@ -34,10 +34,10 @@ class DocBin:
 
     {
         "attrs": List[uint64], # e.g. [TAG, HEAD, ENT_IOB, ENT_TYPE]
-        "tokens": bytes, # Serialized numpy uint64 array with the token data
+        "tokens": bytes, # Serialized nlcpy uint64 array with the token data
         "spans": List[Dict[str, bytes]], # SpanGroups data for each doc
-        "spaces": bytes, # Serialized numpy boolean array with spaces data
-        "lengths": bytes, # Serialized numpy int32 array with the doc lengths
+        "spaces": bytes, # Serialized nlcpy boolean array with spaces data
+        "lengths": bytes, # Serialized nlcpy int32 array with the doc lengths
         "strings": List[str] # List of unique strings in the token data
         "version": str, # DocBin version number
     }
@@ -105,7 +105,7 @@ class DocBin:
         spaces = doc.to_array(SPACY)
         assert array.shape[0] == spaces.shape[0]  # this should never happen
         spaces = spaces.reshape((spaces.shape[0], 1))
-        self.spaces.append(numpy.asarray(spaces, dtype=bool))
+        self.spaces.append(nlcpy.asarray(spaces, dtype=bool))
         self.flags.append({"has_unknown_spaces": doc.has_unknown_spaces})
         for token in doc:
             self.strings.add(token.text)
@@ -201,14 +201,14 @@ class DocBin:
         for tokens in self.tokens:
             assert len(tokens.shape) == 2, tokens.shape  # this should never happen
         lengths = [len(tokens) for tokens in self.tokens]
-        tokens = numpy.vstack(self.tokens) if self.tokens else numpy.asarray([])
-        spaces = numpy.vstack(self.spaces) if self.spaces else numpy.asarray([])
+        tokens = nlcpy.vstack(self.tokens) if self.tokens else nlcpy.asarray([])
+        spaces = nlcpy.vstack(self.spaces) if self.spaces else nlcpy.asarray([])
         msg = {
             "version": self.version,
             "attrs": self.attrs,
             "tokens": tokens.tobytes("C"),
             "spaces": spaces.tobytes("C"),
-            "lengths": numpy.asarray(lengths, dtype="int32").tobytes("C"),
+            "lengths": nlcpy.asarray(lengths, dtype="int32").tobytes("C"),
             "strings": list(sorted(self.strings)),
             "cats": self.cats,
             "flags": self.flags,
@@ -232,14 +232,14 @@ class DocBin:
             raise ValueError(Errors.E1014)
         self.attrs = msg["attrs"]
         self.strings = set(msg["strings"])
-        lengths = numpy.frombuffer(msg["lengths"], dtype="int32")
-        flat_spaces = numpy.frombuffer(msg["spaces"], dtype=bool)
-        flat_tokens = numpy.frombuffer(msg["tokens"], dtype="uint64")
+        lengths = nlcpy.frombuffer(msg["lengths"], dtype="int32")
+        flat_spaces = nlcpy.frombuffer(msg["spaces"], dtype=bool)
+        flat_tokens = nlcpy.frombuffer(msg["tokens"], dtype="uint64")
         shape = (flat_tokens.size // len(self.attrs), len(self.attrs))
         flat_tokens = flat_tokens.reshape(shape)
         flat_spaces = flat_spaces.reshape((flat_spaces.size, 1))
-        self.tokens = NumpyOps().unflatten(flat_tokens, lengths)
-        self.spaces = NumpyOps().unflatten(flat_spaces, lengths)
+        self.tokens = nlcpyOps().unflatten(flat_tokens, lengths)
+        self.spaces = nlcpyOps().unflatten(flat_spaces, lengths)
         self.cats = msg["cats"]
         self.span_groups = msg.get("span_groups", [b"" for _ in lengths])
         self.flags = msg.get("flags", [{} for _ in lengths])

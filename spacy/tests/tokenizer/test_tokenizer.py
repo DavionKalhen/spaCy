@@ -72,7 +72,7 @@ def test_issue1061():
 def test_issue1963(en_tokenizer):
     """Test that doc.merge() resizes doc.tensor"""
     doc = en_tokenizer("a b c d")
-    doc.tensor = numpy.ones((len(doc), 128), dtype="f")
+    doc.tensor = nlcpy.ones((len(doc), 128), dtype="f")
     with doc.retokenize() as retokenizer:
         retokenizer.merge(doc[0:2])
     assert len(doc) == 3

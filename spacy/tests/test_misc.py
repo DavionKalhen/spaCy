@@ -10,7 +10,7 @@ from spacy.ml._precomputable_affine import _backprop_precomputable_affine_paddin
 from spacy.util import dot_to_object, SimpleFrozenList, import_file
 from spacy.util import to_ternary_int, find_available_port
 from thinc.api import Config, Optimizer, ConfigValidationError
-from thinc.api import get_current_ops, set_current_ops, NumpyOps, CupyOps, MPSOps
+from thinc.api import get_current_ops, set_current_ops, nlcpyOps, CupyOps, MPSOps
 from thinc.compat import has_cupy_gpu, has_torch_mps_gpu
 from spacy.training.batchers import minibatch_by_words
 from spacy.lang.en import English
@@ -67,7 +67,7 @@ def test_util_ensure_path_succeeds(text):
 
 
 @pytest.mark.parametrize(
-    "package,result", [("numpy", True), ("sfkodskfosdkfpsdpofkspdof", False)]
+    "package,result", [("nlcpy", True), ("sfkodskfosdkfpsdpofkspdof", False)]
 )
 def test_util_is_package(package, result):
     """Test that an installed package via pip is recognised by util.is_package."""
@@ -136,7 +136,7 @@ def test_require_gpu():
 def test_require_cpu():
     current_ops = get_current_ops()
     require_cpu()
-    assert isinstance(get_current_ops(), NumpyOps)
+    assert isinstance(get_current_ops(), nlcpyOps)
     try:
         import cupy  # noqa: F401
 
@@ -145,7 +145,7 @@ def test_require_cpu():
     except ImportError:
         pass
     require_cpu()
-    assert isinstance(get_current_ops(), NumpyOps)
+    assert isinstance(get_current_ops(), nlcpyOps)
     set_current_ops(current_ops)
 
 

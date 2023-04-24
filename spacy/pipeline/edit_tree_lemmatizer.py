@@ -5,7 +5,7 @@ from itertools import islice
 import nlcpy as np
 
 import srsly
-from thinc.api import Config, Model, SequenceCategoricalCrossentropy, NumpyOps
+from thinc.api import Config, Model, SequenceCategoricalCrossentropy, nlcpyOps
 from thinc.types import Floats2d, Ints2d
 
 from ._edit_tree_internals.edit_trees import EditTrees
@@ -119,7 +119,7 @@ class EditTreeLemmatizer(TrainablePipe):
 
         self.cfg: Dict[str, Any] = {"labels": []}
         self.scorer = scorer
-        self.numpy_ops = NumpyOps()
+        self.nlcpy_ops = nlcpyOps()
 
     def get_loss(
         self, examples: Iterable[Example], scores: List[Floats2d]
@@ -178,7 +178,7 @@ class EditTreeLemmatizer(TrainablePipe):
         guesses = []
         for doc, doc_scores in zip(docs, scores):
             doc_guesses = doc_scores.argmax(axis=1)
-            doc_guesses = self.numpy_ops.asarray(doc_guesses)
+            doc_guesses = self.nlcpy_ops.asarray(doc_guesses)
 
             doc_compat_guesses = []
             for i, token in enumerate(doc):
@@ -195,7 +195,7 @@ class EditTreeLemmatizer(TrainablePipe):
         guesses = []
         top_k = min(self.top_k, len(self.labels))
         for doc, doc_scores in zip(docs, scores):
-            doc_scores = self.numpy_ops.asarray(doc_scores)
+            doc_scores = self.nlcpy_ops.asarray(doc_scores)
             doc_compat_guesses = []
             for i, token in enumerate(doc):
                 for _ in range(top_k):
@@ -215,7 +215,7 @@ class EditTreeLemmatizer(TrainablePipe):
         guesses = []
         for doc, doc_scores in zip(docs, scores):
             doc_guesses = np.argsort(doc_scores)[..., : -self.top_k - 1 : -1]
-            doc_guesses = self.numpy_ops.asarray(doc_guesses)
+            doc_guesses = self.nlcpy_ops.asarray(doc_guesses)
 
             doc_compat_guesses = []
             for token, candidates in zip(doc, doc_guesses):

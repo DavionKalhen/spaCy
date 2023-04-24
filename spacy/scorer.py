@@ -1007,7 +1007,7 @@ def _auc(x, y):
     area = direction * np.trapz(y, x)
     if isinstance(area, np.memmap):
         # Reductions such as .sum used internally in np.trapz do not return a
-        # scalar by default for numpy.memmap instances contrary to
-        # regular numpy.ndarray instances.
+        # scalar by default for nlcpy.memmap instances contrary to
+        # regular nlcpy.ndarray instances.
         area = area.dtype.type(area)
     return area

@@ -20,7 +20,7 @@ def test_issue1727():
     """Test that models with no pretrained vectors can be deserialized
     correctly after vectors are added."""
     nlp = Language(Vocab())
-    data = numpy.ones((3, 300), dtype="f")
+    data = nlcpy.ones((3, 300), dtype="f")
     vectors = Vectors(data=data, keys=["I", "am", "Matt"])
     tagger = nlp.create_pipe("tagger")
     tagger.add_label("PRP")
@@ -36,7 +36,7 @@ def test_issue1727():
 def test_issue1799():
     """Test sentence boundaries are deserialized correctly, even for
     non-projective sentences."""
-    heads_deps = numpy.asarray(
+    heads_deps = nlcpy.asarray(
         [
             [1, 397],
             [4, 436],

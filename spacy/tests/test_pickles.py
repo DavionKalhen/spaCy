@@ -26,7 +26,7 @@ def test_pickle_vocab(text1, text2):
         lex_attr_getters={int(NORM): lambda string: string[:-1]},
         get_noun_chunks=English.Defaults.syntax_iterators.get("noun_chunks"),
     )
-    vocab.set_vector("dog", numpy.ones((5,), dtype="f"))
+    vocab.set_vector("dog", nlcpy.ones((5,), dtype="f"))
     lex1 = vocab[text1]
     lex2 = vocab[text2]
     assert lex1.norm_ == text1[:-1]

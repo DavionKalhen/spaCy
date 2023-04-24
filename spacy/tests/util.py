@@ -62,9 +62,9 @@ def add_vecs_to_vocab(vocab, vectors):
 def get_cosine(vec1, vec2):
     """Get cosine for two given vectors"""
     OPS = get_current_ops()
-    v1 = OPS.to_numpy(OPS.asarray(vec1))
-    v2 = OPS.to_numpy(OPS.asarray(vec2))
-    return numpy.dot(v1, v2) / (numpy.linalg.norm(v1) * numpy.linalg.norm(v2))
+    v1 = OPS.to_nlcpy(OPS.asarray(vec1))
+    v2 = OPS.to_nlcpy(OPS.asarray(vec2))
+    return nlcpy.dot(v1, v2) / (nlcpy.linalg.norm(v1) * nlcpy.linalg.norm(v2))
 
 
 def assert_docs_equal(doc1, doc2):

@@ -200,7 +200,7 @@ def test_tok2vec_listener(with_vectors):
     doc = nlp("Running the pipeline as a whole.")
     doc_tensor = tagger_tok2vec.predict([doc])[0]
     ops = get_current_ops()
-    assert_array_equal(ops.to_numpy(doc.tensor), ops.to_numpy(doc_tensor))
+    assert_array_equal(ops.to_nlcpy(doc.tensor), ops.to_nlcpy(doc_tensor))
 
     # test with empty doc
     doc = nlp("")

@@ -59,7 +59,7 @@ if TYPE_CHECKING:
 
 
 # fmt: off
-OOV_RANK = numpy.iinfo(numpy.uint64).max
+OOV_RANK = nlcpy.iinfo(nlcpy.uint64).max
 DEFAULT_OOV_PROB = -20
 LEXEME_NORM_LANGS = ["cs", "da", "de", "el", "en", "grc", "id", "lb", "mk", "pt", "ru", "sr", "ta", "th"]
 
@@ -1130,18 +1130,18 @@ def get_cuda_stream(
     ops = get_current_ops()
     if CudaStream is None:
         return None
-    elif isinstance(ops, NumpyOps):
+    elif isinstance(ops, nlcpyOps):
         return None
     else:
         return CudaStream(non_blocking=non_blocking)
 
 
-def get_async(stream, numpy_array):
+def get_async(stream, nlcpy_array):
     if cupy is None:
-        return numpy_array
+        return nlcpy_array
     else:
-        array = cupy.ndarray(numpy_array.shape, order="C", dtype=numpy_array.dtype)
-        array.set(numpy_array, stream=stream)
+        array = cupy.ndarray(nlcpy_array.shape, order="C", dtype=nlcpy_array.dtype)
+        array.set(nlcpy_array, stream=stream)
         return array
 
 

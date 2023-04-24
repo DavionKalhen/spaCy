@@ -90,7 +90,7 @@ def get_vectors_loss(ops, docs, prediction, distance):
 
 def get_characters_loss(ops, docs, prediction, nr_char):
     """Compute a loss based on a number of characters predicted from the docs."""
-    target_ids = numpy.vstack([doc.to_utf8_array(nr_char=nr_char) for doc in docs])
+    target_ids = nlcpy.vstack([doc.to_utf8_array(nr_char=nr_char) for doc in docs])
     target_ids = target_ids.reshape((-1,))
     target = ops.asarray(to_categorical(target_ids, n_classes=256), dtype="f")
     target = target.reshape((-1, 256 * nr_char))
@@ -205,7 +205,7 @@ class _RandomWords:
         # Compute normalized lexeme probabilities
         probs = [lex.prob for lex in vocab if lex.prob != 0.0]
         probs = probs[:10000]
-        probs: numpy.ndarray = numpy.exp(numpy.array(probs, dtype="f"))
+        probs: nlcpy.ndarray = nlcpy.exp(nlcpy.array(probs, dtype="f"))
         probs /= probs.sum()
         self.probs = probs
 
@@ -215,7 +215,7 @@ class _RandomWords:
     def next(self) -> str:
         if not self._cache:
             self._cache.extend(
-                numpy.random.choice(len(self.words), 10000, p=self.probs)
+                nlcpy.random.choice(len(self.words), 10000, p=self.probs)
             )
         index = self._cache.pop()
         return self.words[index]
@@ -223,12 +223,12 @@ class _RandomWords:
 
 def _apply_mask(
     docs: Iterable["Doc"], random_words: _RandomWords, mask_prob: float = 0.15
-) -> Tuple[numpy.ndarray, List["Doc"]]:
+) -> Tuple[nlcpy.ndarray, List["Doc"]]:
     # This needs to be here to avoid circular imports
     from ...tokens.doc import Doc  # noqa: F811
 
     N = sum(len(doc) for doc in docs)
-    mask = numpy.random.uniform(0.0, 1.0, (N,))
+    mask = nlcpy.random.uniform(0.0, 1.0, (N,))
     mask = mask >= mask_prob
     i = 0
     masked_docs = []
@@ -252,7 +252,7 @@ def _apply_mask(
 
 
 def _replace_word(word: str, random_words: _RandomWords, mask: str = "[MASK]") -> str:
-    roll = numpy.random.random()
+    roll = nlcpy.random.random()
     if roll < 0.8:
         return mask
     elif roll < 0.9:

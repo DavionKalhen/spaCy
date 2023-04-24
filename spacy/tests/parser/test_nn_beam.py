@@ -59,8 +59,8 @@ def states(docs):
 def tokvecs(docs, vector_size):
     output = []
     for doc in docs:
-        vec = numpy.random.uniform(-0.1, 0.1, (len(doc), vector_size))
-        output.append(numpy.asarray(vec))
+        vec = nlcpy.random.uniform(-0.1, 0.1, (len(doc), vector_size))
+        output.append(nlcpy.asarray(vec))
     return output
 
 
@@ -92,10 +92,10 @@ def beam(moves, examples, beam_width):
 
 @pytest.fixture
 def scores(moves, batch_size, beam_width):
-    return numpy.asarray(
-        numpy.concatenate(
+    return nlcpy.asarray(
+        nlcpy.concatenate(
             [
-                numpy.random.uniform(-0.1, 0.1, (beam_width, moves.n_moves))
+                nlcpy.random.uniform(-0.1, 0.1, (beam_width, moves.n_moves))
                 for _ in range(batch_size)
             ]
         ),

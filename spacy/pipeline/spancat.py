@@ -565,11 +565,11 @@ class SpanCategorizer(TrainablePipe):
         """
         spans, scores = spans_scores
         spans = Ragged(
-            self.model.ops.to_numpy(spans.data), self.model.ops.to_numpy(spans.lengths)
+            self.model.ops.to_nlcpy(spans.data), self.model.ops.to_nlcpy(spans.lengths)
         )
-        target = numpy.zeros(scores.shape, dtype=scores.dtype)
+        target = nlcpy.zeros(scores.shape, dtype=scores.dtype)
         if self.add_negative_label:
-            negative_spans = numpy.ones((scores.shape[0]))
+            negative_spans = nlcpy.ones((scores.shape[0]))
         offset = 0
         label_map = self._label_map
         for i, eg in enumerate(examples):
@@ -596,7 +596,7 @@ class SpanCategorizer(TrainablePipe):
             offset += spans.lengths[i]
         target = self.model.ops.asarray(target, dtype="f")  # type: ignore
         if self.add_negative_label:
-            negative_samples = numpy.nonzero(negative_spans)[0]
+            negative_samples = nlcpy.nonzero(negative_spans)[0]
             target[negative_samples, self._negative_label_i] = 1.0  # type: ignore
         # The target will have the values 0 (for untrue predictions) or 1
         # (for true predictions).
@@ -670,8 +670,8 @@ class SpanCategorizer(TrainablePipe):
         spans = SpanGroup(doc, name=self.key)
         if scores.size == 0:
             return spans
-        scores = self.model.ops.to_numpy(scores)
-        indices = self.model.ops.to_numpy(indices)
+        scores = self.model.ops.to_nlcpy(scores)
+        indices = self.model.ops.to_nlcpy(indices)
         threshold = self.cfg["threshold"]
         max_positive = self.cfg["max_positive"]
 
@@ -679,8 +679,8 @@ class SpanCategorizer(TrainablePipe):
         if max_positive is not None:
             assert isinstance(max_positive, int)
             if self.add_negative_label:
-                negative_scores = numpy.copy(scores[:, self._negative_label_i])
-                scores[:, self._negative_label_i] = -numpy.inf
+                negative_scores = nlcpy.copy(scores[:, self._negative_label_i])
+                scores[:, self._negative_label_i] = -nlcpy.inf
                 ranked = (scores * -1).argsort()  # type: ignore
                 scores[:, self._negative_label_i] = negative_scores
             else:
@@ -698,7 +698,7 @@ class SpanCategorizer(TrainablePipe):
                     if j != self._negative_label_i:
                         spans.append(Span(doc, start, end, label=self.labels[j]))
                         attrs_scores.append(scores[i, j])
-        spans.attrs["scores"] = numpy.array(attrs_scores)
+        spans.attrs["scores"] = nlcpy.array(attrs_scores)
         return spans
 
     def _make_span_group_singlelabel(
@@ -712,20 +712,20 @@ class SpanCategorizer(TrainablePipe):
         # Handle cases when there are zero suggestions
         if scores.size == 0:
             return SpanGroup(doc, name=self.key)
-        scores = self.model.ops.to_numpy(scores)
-        indices = self.model.ops.to_numpy(indices)
+        scores = self.model.ops.to_nlcpy(scores)
+        indices = self.model.ops.to_nlcpy(indices)
         predicted = scores.argmax(axis=1)
-        argmax_scores = numpy.take_along_axis(
-            scores, numpy.expand_dims(predicted, 1), axis=1
+        argmax_scores = nlcpy.take_along_axis(
+            scores, nlcpy.expand_dims(predicted, 1), axis=1
         )
-        keeps = numpy.ones(predicted.shape, dtype=bool)
+        keeps = nlcpy.ones(predicted.shape, dtype=bool)
         # Remove samples where the negative label is the argmax.
         if self.add_negative_label:
-            keeps = numpy.logical_and(keeps, predicted != self._negative_label_i)
+            keeps = nlcpy.logical_and(keeps, predicted != self._negative_label_i)
         # Filter samples according to threshold.
         threshold = self.cfg["threshold"]
         if threshold is not None:
-            keeps = numpy.logical_and(keeps, (argmax_scores >= threshold).squeeze())
+            keeps = nlcpy.logical_and(keeps, (argmax_scores >= threshold).squeeze())
         # Sort spans according to argmax probability
         if not allow_overlap:
             # Get the probabilities
@@ -753,5 +753,5 @@ class SpanCategorizer(TrainablePipe):
             attrs_scores.append(argmax_scores[i])
             spans.append(Span(doc, start, end, label=self.labels[label]))
 
-        spans.attrs["scores"] = numpy.array(attrs_scores)
+        spans.attrs["scores"] = nlcpy.array(attrs_scores)
         return spans

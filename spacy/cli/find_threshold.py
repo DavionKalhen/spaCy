@@ -166,7 +166,7 @@ def find_threshold(
     scores: Dict[float, float] = {}
     config_keys_full = ["components", pipe_name, *config_keys]
     table_col_widths = (10, 10)
-    thresholds = numpy.linspace(0, 1, n_trials)
+    thresholds = nlcpy.linspace(0, 1, n_trials)
     print(wasabi.tables.row(["Threshold", f"{scores_key}"], widths=table_col_widths))
     for threshold in thresholds:
         # Reload pipeline with overrides specifying the new threshold.

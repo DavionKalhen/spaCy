@@ -135,7 +135,7 @@ def test_issue6815_2(sentence, start_idx, end_idx, kb_id):
 
 @pytest.mark.parametrize(
     "sentence, start_idx,end_idx,vector",
-    [("Welcome to Mumbai, my friend", 11, 17, numpy.array([0.1, 0.2, 0.3]))],
+    [("Welcome to Mumbai, my friend", 11, 17, nlcpy.array([0.1, 0.2, 0.3]))],
 )
 @pytest.mark.issue(6815)
 def test_issue6815_3(sentence, start_idx, end_idx, vector):
@@ -292,7 +292,7 @@ def test_spans_lca_matrix(en_tokenizer):
         deps=["dep"] * len(tokens),
     )
     lca = doc[1:4].get_lca_matrix()
-    assert_array_equal(lca, numpy.asarray([[0, 0, 0], [0, 1, 2], [0, 2, 2]]))
+    assert_array_equal(lca, nlcpy.asarray([[0, 0, 0], [0, 1, 2], [0, 2, 2]]))
 
 
 def test_span_similarity_match():
@@ -594,11 +594,11 @@ def test_span_with_vectors(doc):
     ]
     add_vecs_to_vocab(doc.vocab, vectors)
     # 0-length span
-    assert_array_equal(ops.to_numpy(doc[0:0].vector), numpy.zeros((3,)))
+    assert_array_equal(ops.to_nlcpy(doc[0:0].vector), nlcpy.zeros((3,)))
     # longer span with no vector
-    assert_array_equal(ops.to_numpy(doc[0:4].vector), numpy.zeros((3,)))
+    assert_array_equal(ops.to_nlcpy(doc[0:4].vector), nlcpy.zeros((3,)))
     # single-token span with vector
-    assert_array_equal(ops.to_numpy(doc[10:11].vector), [-1, -1, -1])
+    assert_array_equal(ops.to_nlcpy(doc[10:11].vector), [-1, -1, -1])
     doc.vocab.vectors = prev_vectors
 
 
